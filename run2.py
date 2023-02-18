@@ -1,6 +1,34 @@
 import RPi.GPIO as GPIO
 import time
 
+"""
+low=32,23
+medium=57,48
+high=97,88
+"""
+
+def lerp(a, b, t):
+    """Linear interpolate on the scale given by a to b, using t as the point on that scale.
+
+    Examples
+    --------
+        50 == lerp(0, 100, 0.5)
+        4.2 == lerp(1, 5, 0.8)
+
+    """
+    return (1 - t) * a + t * b
+
+
+def inv_lerp(a, b, v):
+    """Inverse Linar Interpolation, get the fraction between a and b on which v resides.
+
+    Examples
+    --------
+        0.5 == inv_lerp(0, 100, 50)
+        0.8 == inv_lerp(1, 5, 4.2)
+
+    """
+    return (v - a) / (b - a)
 
 def low():
     print("low")
@@ -14,8 +42,16 @@ def medium():
 
 def high():
     print("high")
-    ma.ChangeDutyCycle(97)
-    mb.ChangeDutyCycle(88)
+    ma.ChangeDutyCycle(lerp(0,97,0.8))
+    mb.ChangeDutyCycle(lerp(0,88,0.8))
+
+def speed(m, p):
+    if(m == "a"):
+        max = 97
+    elif(m == "b"):
+        max = 88
+
+    print("Engine: " + m + " Percent: " + str(p) + " Duty cycle: " + str(lerp(0,max,p)) )
 
 def stop():
     print("stop")
@@ -95,8 +131,12 @@ def stop_spin_and_measure():
     time.sleep(0.5)
     spin()
     distance_north = measure_north()
-    time.sleep(1)
+    time.sleep(0.5)
 
+    stop()
+    time.sleep(2)
+
+    distance_north = measure_north()
     if distance_north > 70:
         forward()
     else:
@@ -161,6 +201,8 @@ try:
         time.sleep(1)
 
         if distance_north > 50:
+            speed("a",0.80)
+            speed("b",0.80)
             forward()
         else:
             stop_spin_and_measure()
@@ -279,8 +321,6 @@ try:
             GPIO.output(in4,GPIO.HIGH)
 
             x='z'
- 
-        elif x=='sp':
             print("spin")
             ma.ChangeDutyCycle(80)
             GPIO.output(in1,GPIO.HIGH)
