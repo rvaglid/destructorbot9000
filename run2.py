@@ -45,13 +45,26 @@ def high():
     ma.ChangeDutyCycle(lerp(0,97,0.8))
     mb.ChangeDutyCycle(lerp(0,88,0.8))
 
-def speed(m, p):
+def forward(m, p):
+    lights_on()
+    print("forward")
+    GPIO.output(in1,GPIO.HIGH)
+    GPIO.output(in2,GPIO.LOW)
+    GPIO.output(in3,GPIO.HIGH)
+    GPIO.output(in4,GPIO.LOW)
+ 
     if(m == "a"):
         max = 97
+	dc = lerp(0,max,p)
+	ma.ChangeDutyCycle(dc)
+	print("Engine: " + m + " Percent: " + str(p) + " Duty cycle: " + str(dc) )
+
     elif(m == "b"):
         max = 88
+	dc = lerp(0,max,p)
+	mb.ChangeDutyCycle(dc)
+	print("Engine: " + m + " Percent: " + str(p) + " Duty cycle: " + str(dc) )
 
-    print("Engine: " + m + " Percent: " + str(p) + " Duty cycle: " + str(lerp(0,max,p)) )
 
 def stop():
     print("stop")
@@ -61,14 +74,14 @@ def stop():
     GPIO.output(in3,GPIO.LOW)
     GPIO.output(in4,GPIO.LOW)
 
-def forward():
-    print("forward")
-    GPIO.output(in1,GPIO.HIGH)
-    GPIO.output(in2,GPIO.LOW)
-    GPIO.output(in3,GPIO.HIGH)
-    GPIO.output(in4,GPIO.LOW)
-    ma.ChangeDutyCycle(57)
-    mb.ChangeDutyCycle(48)
+#def forward():
+#    print("forward")
+#    GPIO.output(in1,GPIO.HIGH)
+#    GPIO.output(in2,GPIO.LOW)
+#    GPIO.output(in3,GPIO.HIGH)
+#    GPIO.output(in4,GPIO.LOW)
+#    ma.ChangeDutyCycle(57)
+#    mb.ChangeDutyCycle(48)
 
 def backward():
     print("backward")
@@ -138,7 +151,9 @@ def stop_spin_and_measure():
 
     distance_north = measure_north()
     if distance_north > 70:
-        forward()
+        forward("a",0.50)
+        forward("b",0.50)
+ 
     else:
         stop_spin_and_measure()
 
@@ -201,9 +216,9 @@ try:
         time.sleep(1)
 
         if distance_north > 50:
-            speed("a",0.80)
-            speed("b",0.80)
-            forward()
+            forward("a",0.80)
+            forward("b",0.80)
+            #forward()
         else:
             stop_spin_and_measure()
             #backward()
