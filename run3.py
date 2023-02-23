@@ -123,20 +123,16 @@ GPIO.output(distanceTriggerPin, GPIO.LOW)
 GPIO.setup(distanceEchoPin, GPIO.IN)
 
 # Right motor
-GPIO.setup(motorRightForwardPin, GPIO.OUT)
-GPIO.setup(motorRightReversePin, GPIO.OUT)
+GPIO.setup(motorRightForwardPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(motorRightReversePin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(motorRightPwmPin, GPIO.OUT)
 motorRightPwm = GPIO.PWM(motorRightPwmPin, 1000) # Create PWM instance with 1000 Hz
-GPIO.output(motorRightForwardPin, GPIO.LOW)
-GPIO.output(motorRightReversePin, GPIO.LOW)
 
 # Left motor
-GPIO.setup(motorLeftForwardPin, GPIO.OUT)
-GPIO.setup(motorLeftReversePin, GPIO.OUT)
+GPIO.setup(motorLeftForwardPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(motorLeftReversePin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(motorLeftPwmPin, GPIO.OUT)
 motorLeftPwm = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
-GPIO.output(motorLeftForwardPin, GPIO.LOW)
-GPIO.output(motorLeftReversePin, GPIO.LOW)
 
 # Headlights
 GPIO.setup(headlightsPin, GPIO.OUT)
