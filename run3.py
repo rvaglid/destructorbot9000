@@ -118,8 +118,7 @@ motorLeftRotateSpeed = 87
 GPIO.setmode(GPIO.BCM)
 
 # Distance sensor
-GPIO.setup(distanceTriggerPin, GPIO.OUT)
-GPIO.output(distanceTriggerPin, GPIO.LOW)
+GPIO.setup(distanceTriggerPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(distanceEchoPin, GPIO.IN)
 
 # Right motor
