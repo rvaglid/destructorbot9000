@@ -133,7 +133,8 @@ GPIO.setup(motorLeftPwmPin, GPIO.OUT)
 motorLeftPower = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
 
 # Headlights
-GPIO.setup(headlightsPin, GPIO.OUT, pull_up_down=GPIO.PUD_UP) # On
+GPIO.setup(headlightsPin, GPIO.OUT)
+GPIO.output(motorLeftForwardPin, GPIO.HIGH) # On
 
 
 ###########################
