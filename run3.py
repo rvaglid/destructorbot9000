@@ -32,7 +32,7 @@ def direction(motorLeftPower, motorRightPower, motorLeftForwards, motorRightForw
 
 
 def forward():
-    print("Forward (Left power: " + motorLeftForwardSpeed + " Right power: " + motorRightForwardSpeed + "\n")
+    print("Forward (Left power: " + str(motorLeftForwardSpeed) + " Right power: " + str(motorRightForwardSpeed) + "\n")
     direction(motorLeftForwardSpeed, motorRightForwardSpeed, GPIO.HIGH, GPIO.HIGH, GPIO.LOW, GPIO.LOW)    
 
 
@@ -65,13 +65,11 @@ def tooClose():
     pulse_duration = pulse_end_time - pulse_start_time
     distance = round(pulse_duration * 17150, 2)
     if distance < distanceMinimum:
-        print("Too close: " + distance + " CM (Minimum: " + distanceMinimum + ")\n")
+        print("Too close: " + str(distance) + " CM (Minimum: " + str(distanceMinimum) + ")\n")
         return True
     else:
-        print("Distance OK: " + distance + " CM (Minimum: " + distanceMinimum + ")\n")
+        print("Distance OK: " + str(distance) + " CM (Minimum: " + str(distanceMinimum) + ")\n")
         return True
-        
-    print("Distance: ", distance, " CM\n")
     return distance
 
 
