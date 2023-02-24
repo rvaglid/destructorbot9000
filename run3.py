@@ -21,8 +21,8 @@ def direction(motorLeftSpeed, motorRightSpeed, motorLeftForwards, motorRightForw
     stop()
 
     # Set power
-    motorRightPwm.ChangeDutyCycle(motorRightSpeed)
-    motorLeftPwm.ChangeDutyCycle(motorLeftSpeed)
+    motorRightPwm.ChangeDutyCycle(float(motorRightSpeed))
+    motorLeftPwm.ChangeDutyCycle(float(motorLeftSpeed))
 
     # Set direction
     GPIO.output(motorRightForwardPin, motorLeftForwards)
@@ -45,8 +45,8 @@ def reverse(duration):
 
 def rotateRight(duration):
     print("Rotating right\n")
-    motorLeftPwm.ChangeDutyCycle(motorLeftRotateSpeed)
-    motorRightPwm.ChangeDutyCycle(motorRightRotateSpeed)
+    motorLeftPwm.ChangeDutyCycle(float(motorLeftRotateSpeed))
+    motorRightPwm.ChangeDutyCycle(float(motorRightRotateSpeed))
     direction(motorLeftRotateSpeed, motorRightRotateSpeed, GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
     time.sleep(duration)
     stop()
