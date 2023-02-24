@@ -112,18 +112,23 @@ motorLeftRotateSpeed = 87
 GPIO.setmode(GPIO.BCM)
 
 # Distance sensor
-GPIO.setup(distanceTriggerPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(distanceTriggerPin, GPIO.OUT)
+GPIO.output(distanceTriggerPin, GPIO.LOW)
 GPIO.setup(distanceEchoPin, GPIO.IN)
 
 # Right motor
-GPIO.setup(motorRightForwardPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(motorRightReversePin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(motorRightForwardPin, GPIO.OUT)
+GPIO.output(motorRightForwardPin, GPIO.LOW)
+GPIO.setup(motorRightReversePin, GPIO.OUT)
+GPIO.output(motorRightReversePin, GPIO.LOW)
 GPIO.setup(motorRightPwmPin, GPIO.OUT)
 motorRightPower = GPIO.PWM(motorRightPwmPin, 1000) # Create PWM instance with 1000 Hz
 
 # Left motor
-GPIO.setup(motorLeftForwardPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(motorLeftReversePin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(motorLeftForwardPin, GPIO.OUT)
+GPIO.output(motorLeftForwardPin, GPIO.LOW)
+GPIO.setup(motorLeftReversePin, GPIO.OUT)
+GPIO.output(motorLeftReversePin, GPIO.LOW)
 GPIO.setup(motorLeftPwmPin, GPIO.OUT)
 motorLeftPower = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
 
