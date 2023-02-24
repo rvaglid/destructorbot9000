@@ -17,12 +17,12 @@ def stop():
     GPIO.output(motorLeftForwardPin, GPIO.LOW)
     GPIO.output(motorLeftReversePin, GPIO.LOW)
 
-def direction(motorLeftPower, motorRightPower, motorLeftForwards, motorRightForwards, motorLeftReverse, motorRightReverse):
+def direction(motorLeftSpeed, motorRightSpeed, motorLeftForwards, motorRightForwards, motorLeftReverse, motorRightReverse):
     stop()
 
     # Set power
-    motorRightPower.ChangeDutyCycle(motorRightPower)
-    motorLeftPower.ChangeDutyCycle(motorLeftPower)
+    motorRightPwm.ChangeDutyCycle(motorRightSpeed)
+    motorLeftPwm.ChangeDutyCycle(motorLeftSpeed)
 
     # Set direction
     GPIO.output(motorRightForwardPin, motorLeftForwards)
@@ -45,8 +45,8 @@ def reverse(duration):
 
 def rotateRight(duration):
     print("Rotating right\n")
-    motorLeftPower.ChangeDutyCycle(motorLeftRotateSpeed)
-    motorRightPower.ChangeDutyCycle(motorRightRotateSpeed)
+    motorLeftPwm.ChangeDutyCycle(motorLeftRotateSpeed)
+    motorRightPwm.ChangeDutyCycle(motorRightRotateSpeed)
     direction(motorLeftRotateSpeed, motorRightRotateSpeed, GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
     time.sleep(duration)
     stop()
@@ -120,7 +120,7 @@ GPIO.output(motorRightForwardPin, GPIO.LOW)
 GPIO.setup(motorRightReversePin, GPIO.OUT)
 GPIO.output(motorRightReversePin, GPIO.LOW)
 GPIO.setup(motorRightPwmPin, GPIO.OUT)
-motorRightPower = GPIO.PWM(motorRightPwmPin, 1000) # Create PWM instance with 1000 Hz
+motorRightPwm = GPIO.PWM(motorRightPwmPin, 1000) # Create PWM instance with 1000 Hz
 
 # Left motor
 GPIO.setup(motorLeftForwardPin, GPIO.OUT)
@@ -128,7 +128,7 @@ GPIO.output(motorLeftForwardPin, GPIO.LOW)
 GPIO.setup(motorLeftReversePin, GPIO.OUT)
 GPIO.output(motorLeftReversePin, GPIO.LOW)
 GPIO.setup(motorLeftPwmPin, GPIO.OUT)
-motorLeftPower = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
+motorLeftPwm = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
 
 # Headlights
 GPIO.setup(headlightsPin, GPIO.OUT)
