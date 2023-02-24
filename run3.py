@@ -47,7 +47,7 @@ def rotateRight(duration):
     print("Rotating right\n")
     motorLeftPower.ChangeDutyCycle(motorLeftRotateSpeed)
     motorRightPower.ChangeDutyCycle(motorRightRotateSpeed)
-    direction(GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
+    direction(motorLeftRotateSpeed, motorRightRotateSpeed, GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
     time.sleep(duration)
     stop()
 
