@@ -93,12 +93,12 @@ distanceMinimum = 50
 
 # Right motor speed
 motorRightReverseSpeed = 23
-motorRightForwardSpeed = 70,4
+motorRightForwardSpeed = 70.4
 motorRightRotateSpeed = 78
 
 # Left motor speed
 motorLeftReverseSpeed = 32
-motorLeftForwardSpeed = 77,6
+motorLeftForwardSpeed = 77.6
 motorLeftRotateSpeed = 87
 
 
@@ -136,7 +136,7 @@ GPIO.output(motorLeftForwardPin, GPIO.HIGH) # On
 
 
 ###########################
-# Destructobot 9000 Brain #
+# Destructorbot 9000 Brain #
 ###########################
 
 try:
