@@ -69,7 +69,7 @@ def tooClose():
         return True
     else:
         print("Distance OK: " + str(distance) + " CM (Minimum: " + str(distanceMinimum) + ")\n")
-        return True
+        return False
     return distance
 
 
