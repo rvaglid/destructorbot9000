@@ -11,20 +11,16 @@ import time
 #############
 
 
-def forward(motor):
+def forward():
     # Turn on headlights
     GPIO.output(headlightsPin, GPIO.HIGH)
 
-    print("Forward\n")
+    print("Forward (Left power: " + motorLeftForwardSpeed + " Right power: " + motorRightForwardSpeed + "\n")
     GPIO.output(motorRightForwardPin, GPIO.HIGH)
     GPIO.output(motorRightReversePin, GPIO.LOW)
     GPIO.output(motorLeftForwardPin, GPIO.HIGH)
     GPIO.output(motorLeftReversePin, GPIO.LOW)
-
-    print("Motor: " + motor + " Power: " + str(motorRightForwardSpeed) + "\n")
     motorRightPwm.ChangeDutyCycle(motorRightForwardSpeed)
-
-    print("Motor: " + motor + " Power: " + str(motorLeftForwardSpeed) + "\n")
     motorLeftPwm.ChangeDutyCycle(motorLeftForwardSpeed)
 
 
