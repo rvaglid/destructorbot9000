@@ -10,54 +10,49 @@ import time
 # Functions #
 #############
 
-
-def forward():
-    # Turn on headlights
-    GPIO.output(headlightsPin, GPIO.HIGH)
-
-    print("Forward (Left power: " + motorLeftForwardSpeed + " Right power: " + motorRightForwardSpeed + "\n")
-    GPIO.output(motorRightForwardPin, GPIO.HIGH)
-    GPIO.output(motorRightReversePin, GPIO.LOW)
-    GPIO.output(motorLeftForwardPin, GPIO.HIGH)
-    GPIO.output(motorLeftReversePin, GPIO.LOW)
-    motorRightPwm.ChangeDutyCycle(motorRightForwardSpeed)
-    motorLeftPwm.ChangeDutyCycle(motorLeftForwardSpeed)
-
-
 def stop():
-    print("Stopping\n")
-    
-    # Turn off headlights
-    GPIO.output(headlightsPin, GPIO.LOW)
-    
     # Stop motors
     GPIO.output(motorRightForwardPin, GPIO.LOW)
     GPIO.output(motorRightReversePin, GPIO.LOW)
     GPIO.output(motorLeftForwardPin, GPIO.LOW)
     GPIO.output(motorLeftReversePin, GPIO.LOW)
 
+def direction(motorLeftPower, motorRightPower, motorLeftForwards, motorRightForwards, motorLeftReverse, motorRightReverse):
+    stop()
 
-def reverse():
+    # Set power
+    motorRightPower.ChangeDutyCycle(motorRightPower)
+    motorLeftPower.ChangeDutyCycle(motorLeftPower)
+
+    # Set direction
+    GPIO.output(motorRightForwardPin, motorLeftForwards)
+    GPIO.output(motorRightReversePin, motorRightForwards)
+    GPIO.output(motorLeftForwardPin, motorLeftReverse)
+    GPIO.output(motorLeftReversePin, motorRightReverse)
+
+
+def forward():
+    print("Forward (Left power: " + motorLeftForwardSpeed + " Right power: " + motorRightForwardSpeed + "\n")
+    direction(motorLeftForwardSpeed, motorRightForwardSpeed, GPIO.HIGH, GPIO.HIGH, GPIO.LOW, GPIO.LOW)    
+
+
+def reverse(duration):
     print("Reversing\n")
-    motorRightPwm.ChangeDutyCycle(motorRightReverseSpeed)
-    motorLeftPwm.ChangeDutyCycle(motorLeftReverseSpeed)
-    GPIO.output(motorRightForwardPin, GPIO.LOW)
-    GPIO.output(motorRightReversePin, GPIO.HIGH)
-    GPIO.output(motorLeftForwardPin, GPIO.LOW)
-    GPIO.output(motorLeftReversePin, GPIO.HIGH)
+    direction(motorLeftReverseSpeed, motorRightReverseSpeed, GPIO.LOW, GPIO.LOW, GPIO.HIGH, GPIO.HIGH)
+    time.sleep(duration)
+    stop()
 
 
-def rotateRight():
+def rotateRight(duration):
     print("Rotating right\n")
-    motorLeftPwm.ChangeDutyCycle(motorLeftRotateSpeed)
-    motorRightPwm.ChangeDutyCycle(motorRightRotateSpeed)
-    GPIO.output(motorRightReversePin, GPIO.LOW)
-    GPIO.output(motorLeftForwardPin, GPIO.LOW)
-    GPIO.output(motorRightForwardPin, GPIO.HIGH)
-    GPIO.output(motorLeftReversePin, GPIO.HIGH)
+    motorLeftPower.ChangeDutyCycle(motorLeftRotateSpeed)
+    motorRightPower.ChangeDutyCycle(motorRightRotateSpeed)
+    direction(GPIO.HIGH, GPIO.LOW, GPIO.LOW, GPIO.HIGH)
+    time.sleep(duration)
+    stop()
 
 
-def checkDistance():
+def tooClose():
     GPIO.output(distanceTriggerPin, GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(distanceTriggerPin, GPIO.LOW)
@@ -69,16 +64,16 @@ def checkDistance():
 
     pulse_duration = pulse_end_time - pulse_start_time
     distance = round(pulse_duration * 17150, 2)
+    if distance < distanceMinimum:
+        print("Too close: " + distance + " CM (Minimum: " + distanceMinimum + ")\n")
+        return True
+    else:
+        print("Distance OK: " + distance + " CM (Minimum: " + distanceMinimum + ")\n")
+        return True
+        
     print("Distance: ", distance, " CM\n")
     return distance
 
-
-def redirect():
-    reverse()
-    time.sleep(0.5)
-    rotateRight()
-    time.sleep(0.5)
-    stop()
 
 #################
 # Configuration #
@@ -94,6 +89,9 @@ motorLeftPwmPin = 25
 motorLeftForwardPin = 10
 motorLeftReversePin = 11
 headlightsPin = 21
+
+# Distance
+distanceMinimum = 50
 
 # Right motor speed
 motorRightReverseSpeed = 23
@@ -121,16 +119,16 @@ GPIO.setup(distanceEchoPin, GPIO.IN)
 GPIO.setup(motorRightForwardPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(motorRightReversePin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(motorRightPwmPin, GPIO.OUT)
-motorRightPwm = GPIO.PWM(motorRightPwmPin, 1000) # Create PWM instance with 1000 Hz
+motorRightPower = GPIO.PWM(motorRightPwmPin, 1000) # Create PWM instance with 1000 Hz
 
 # Left motor
 GPIO.setup(motorLeftForwardPin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(motorLeftReversePin, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(motorLeftPwmPin, GPIO.OUT)
-motorLeftPwm = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
+motorLeftPower = GPIO.PWM(motorLeftPwmPin, 1000) # Create PWM instance with 1000 Hz
 
 # Headlights
-GPIO.setup(headlightsPin, GPIO.OUT)
+GPIO.setup(headlightsPin, GPIO.OUT, pull_up_down=GPIO.PUD_UP) # On
 
 
 ###########################
@@ -138,12 +136,25 @@ GPIO.setup(headlightsPin, GPIO.OUT)
 ###########################
 
 try:
-    while True: # Infinite loop
-        distance = checkDistance()
-        if distance > 50:
+    # Keep rotating until minimum distance found
+    while tooClose():
+        rotateRight(0.5)
+
+    # Move forwards
+    forward()
+
+    # Infinite loop
+    while True: 
+        if tooClose():
+            reverse(0.5)
+            rotateRight(0.5)
+
+            # Keep rotating until minimum distance found
+            while tooClose():
+                rotateRight(0.5)
+
+            # Move forwards
             forward()
-        else:
-            redirect()
 finally:
     print("Cleaning up and exit\n")
     GPIO.cleanup()
